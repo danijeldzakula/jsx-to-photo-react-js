@@ -1,0 +1,20 @@
+@use '../abstracts/variables' as *;
+
+.first {
+    padding: 30px;
+    font-size: 48px;
+    color: yellow;
+    background-color: silver;    
+}
+
+.second {
+    padding: 30px;
+    font-size: 48px;
+    color: white;
+    background-color: blue;
+}
+
+.img {
+    display: block;
+    max-width: 100%;
+}

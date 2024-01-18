@@ -1,0 +1,22 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    background-color: red;
+    transition: all 0.5s 0.25s ease;
+
+    &--right {
+        right: 0;
+        transform: translateX(100%);
+        
+        &.isActive {
+            transform: translateX(0);
+        }
+    }
+
+    &--left {
+        left: 0;
+    }
+}

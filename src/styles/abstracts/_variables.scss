@@ -1,0 +1,68 @@
+$breakpoints: (
+    "phone": 400px,
+    "phone-wide": 480px,
+    "phablet": 560px,
+    "tablet-small": 640px,
+    "tablet": 768px,
+    "tablet-wide": 1024px,
+    "desktop": 1248px,
+    "desktop-wide": 1440px
+);
+
+$z-indexes: (
+  "modal",
+  "sidebar",
+  “header”
+);
+
+// Font family
+$fontFamilyApple: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+
+// Font weight
+$fontW100: 100;
+$fontW200: 200;
+$fontW300: 300;
+$fontW400: 400;
+$fontW500: 500;
+$fontW600: 600;
+$fontW700: 700;
+$fontW800: 800;
+$fontW900: 900;
+
+// Opacity
+$opacity0: 0;
+$opacity10: 0.1;
+$opacity20: 0.2;
+$opacity30: 0.3;
+$opacity40: 0.4;
+$opacity50: 0.5;
+$opacity60: 0.6;
+$opacity70: 0.7;
+$opacity80: 0.8;
+$opacity90: 0.9;
+$opacity100: 1;
+
+// Border Radisu
+$borderRBase: 3px;
+$borderRadiusXS: #{$borderRBase * 1}; // 3px
+$borderRadiusMD: #{$borderRBase * 2}; // 6px
+$borderRadiusLG: #{$borderRBase * 3}; // 9px
+$borderRadiusXL: #{$borderRBase * 4}; // 12px
+$borderRadiusXXL: #{$borderRBase * 32}; // 96px
+$borderRadiusFull: 100%; // 100%
+
+// Gap (padding, margin, column & row gap...)
+$gapBase: 8px;
+$gapSmall: #{$gapBase * 1}; // 8px
+$gapMedium: #{$gapBase * 2}; // 16px
+$gapLarge: #{$gapBase * 3}; // 24px
+$gapExtra: #{$gapBase * 4}; // 32px
+$gapBig: #{$gapBase * 5}; // 40px
+
+// Colors
+$black: #131310 !default;
+$white: #ffffff !default;
+
+$officialColor: #0361ec !default; // #7d7a08 - #087d6d - #1b7d08 - #08527d
+$dangerColor: #c91313 !default;
+$secondaryColor: #676b74 !default;

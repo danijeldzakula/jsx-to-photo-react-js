@@ -1,0 +1,416 @@
+@use './variables' as *;
+@use './functions' as *;
+
+// CREDIT's
+// https://www.developerdrive.com/10-best-sass-mixins-for-web-developers/
+// https://silvawebdesigns.com/13-amazing-sass-scss-mixins-we-use-on-every-website/
+
+// TYPOGRAPHY 
+@mixin font-size($size) {
+    font-size: $size;
+    font-size: calculateRem($size);
+}
+
+@mixin line-height($height: 12, $base: 16){
+    line-height: $height + px;
+    line-height: ($height / $base) * 1rem;
+}
+
+@mixin font-source-sans($size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+    @if $size { font-size: $size; }
+    @if $colour { color: $colour; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
+
+@mixin fluid-font($min-width, $max-width, $min-font-size, $max-font-size) {
+    $unit1: unit($min-width);
+    $unit2: unit($max-width);
+    $unit3: unit($min-font-size);
+    $unit4: unit($max-font-size);
+    @if $unit1 == $unit2 and $unit1 == $unit3 and $unit1 == $unit4 {
+      & {
+        font-size: $min-font-size;
+        line-height: $min-font-size * 1.618;
+        @media screen and (min-width: $min-width) {
+          font-size: calc(
+            #{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} *
+              ((100vw - #{$min-width}) / #{strip-unit($max-width - $min-width)})
+          );
+          line-height: calc(
+            #{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} *
+              1.618 *
+              ((100vw - #{$min-width}) / #{strip-unit($max-width - $min-width)})
+          );
+        }
+        @media screen and (min-width: $max-width) {
+          font-size: $max-font-size;
+          line-height: $max-font-size * 1.618;
+        }
+      }
+    }
+}
+
+
+// ANIMATION
+@mixin animate($animation,$duration,$method,$times) {
+    animation: $animation $duration $method $times;
+}
+
+// TRANSITIONS
+@mixin transition($values...) { 
+    $transitions: ();
+    
+    @each $declaration in $values {
+        $prop: nth($declaration, 1);
+        $prop-opts: ();
+        $length: length($declaration);
+        @for $i from 2 through $length {
+            $prop-opts: append($prop-opts, nth($declaration, $i));   
+        }
+        $trans: ($prop, $prop-opts);
+        $transitions: append($transitions, $trans, comma);
+    }
+
+    transition: $values;
+}
+
+// KEYFRAMES 
+@mixin keyframes($name) {
+    @keyframes #{$name} {
+        @content;
+    }
+}
+
+// RETINA IOS
+@mixin retina-image($image, $width, $height) {
+    @media (min--moz-device-pixel-ratio: 1.3),
+    (-o-min-device-pixel-ratio: 2.6/2),
+    (-webkit-min-device-pixel-ratio: 1.3),
+    (min-device-pixel-ratio: 1.3),
+    (min-resolution: 1.3dppx) {
+        background-image: url($image);
+        background-size: $width $height;
+    }
+}
+
+// POSITIONS 
+@mixin position($position: relative, $top: null, $right: null, $bottom: null, $left: null, $z-index: initial) {
+    position: $position;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    z-index: $z-index;
+}
+
+// BREAKPOINS
+@mixin breakpoint($point) {
+    @if $point == large {
+       @media only screen and (min-width: 1366px) {
+          @content;
+       }
+    } 
+    @else if $point == desktop {
+       @media only screen and (min-width: 1024px) {
+          @content;
+       }
+    } 
+    @else if $point == tablet {
+       @media only screen and (min-width: 600px) {
+          @content;
+       }
+    }
+}
+
+// ASPECT RATIO
+@mixin aspect-ratio($width, $height) {
+    position: relative;
+    &:before {
+       display: block;
+       content: "";
+       width: 100%;
+       padding-top: ($height / $width) * 100%;
+    }
+    & > .inner-box {
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+    }
+}
+
+// TEXT SHORTEN
+@mixin text-shorten {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin truncate($truncation-boundary) {
+    max-width: $truncation-boundary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// RATIO
+@mixin ratio($x,$y, $pseudo: false) {
+    $padding: unquote( ( $y / $x ) * 100 + '%' );
+    @if $pseudo {
+        &:before {
+            @include pseudo($pos: relative);
+            width: 100%;
+            padding-top: $padding;
+        }
+    } @else {
+        padding-top: $padding;
+    }
+}
+
+// RESPONSIVE RATIO
+@mixin responsive-ratio($x,$y, $pseudo: false) {
+    $padding: unquote( ( $y / $x ) * 100 + '%' );
+    @if $pseudo {
+        &:before {
+            @include pseudo($pos: relative);
+            width: 100%;
+            padding-top: $padding;
+        }
+    } @else {
+        padding-top: $padding;
+    }
+}
+
+ 
+@mixin respond-above($breakpoint) {
+    @if map-has-key($breakpoints, $breakpoint) {
+        $breakpoint-value: map-get($breakpoints, $breakpoint);
+        @media (min-width: $breakpoint-value) {
+            @content;
+        }
+    }
+    @else {
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+// FLEXBOX 
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-center-column {
+    @include flex-center;
+    flex-direction: column;
+}
+
+@mixin flex-center-vert {
+    display: flex;
+    align-items: center;
+}
+
+@mixin flex-center-horiz {
+    display: flex;
+    justify-content: center;
+}
+
+// Z-INDEX 
+@function z-index($name) {
+    @if index($z-indexes, $name) {
+        @return (length($z-indexes) - index($z-indexes, $name))+1;
+    }
+    @else {
+        @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+        @return null;
+    }
+}
+
+// MEDIA QUERY 
+@mixin mq($width, $type: min) {
+    @if map_has_key($breakpoints, $width) {
+        $width: map_get($breakpoints, $width);
+        @if $type == max {
+            $width: $width - 1px;
+        }
+        @media only screen and (#{$type}-width: $width) {
+            @content;
+        }
+    }
+}
+
+// MARGIN X AUTO
+@mixin mx-auto {
+    margin: { 
+        left: auto;
+        right: auto;
+    }
+}
+
+@mixin my-auto {
+    margin: { 
+        top: auto;
+        bottom: auto;
+    }
+}
+
+@mixin m-auto {
+    @include mx-auto();
+    @include my-auto();
+}
+
+// BORDER RADIUS
+@mixin border-radius($radius) {
+    border-radius: $radius;
+    background-clip: padding-box;
+}
+
+@mixin border-top-radius($radius) {
+    border-top-right-radius: $radius;
+    border-top-left-radius: $radius;
+    background-clip: padding-box;
+}
+@mixin border-right-radius($radius) {
+    border-bottom-right-radius: $radius;
+    border-top-right-radius: $radius;
+    background-clip: padding-box;
+}
+@mixin border-bottom-radius($radius) {
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+    background-clip: padding-box;
+}
+@mixin border-left-radius($radius) {
+    border-bottom-left-radius: $radius;
+    border-top-left-radius: $radius;
+    background-clip: padding-box;
+}
+
+// OPACITY 
+@mixin opacity($opacity) {
+    opacity: $opacity;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie);
+}
+
+// BOX BLOCK 
+@mixin box($width, $height: $width) {
+    width: $width;
+    height: $height;
+}
+
+// BACKGROUND IMAGE 
+@mixin cover-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+// VISIBILITY
+@mixin fade($type) {
+    @if $type== "hide" {
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 1s, opacity 1s;
+    } @else if $type== "show" {
+      visibility: visible;
+      opacity: 1;
+      transition: visibility 1s, opacity 1s;
+    }
+}
+
+// PADDING 
+@mixin padding($top, $right, $bottom, $left) {
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+    padding-left: $left;
+}
+
+// MARGIN 
+@mixin margin($top, $right, $bottom, $left) {
+    margin-top: $top;
+    margin-right: $right;
+    margin-bottom: $bottom;
+    margin-left: $left;
+}
+
+// SPACE 
+@mixin space($type:margin, $direction:all, $amount:0){
+	@if $type == padding {
+		@if $direction == all{
+			padding: $amount;
+		} @else if $direction == top {
+			padding-top:$amount
+		} @else if $direction == left {
+			padding-left:$amount
+		} @else if $direction == right {
+			padding-right:$amount
+		} @else {
+			padding-bottom:$amount
+		}
+	} @else {
+		@if $direction == all{
+			margin: $amount;
+		} @else if $direction == top {
+			margin-top:$amount
+		} @else if $direction == left {
+			margin-left:$amount
+		} @else if $direction == right {
+			margin-right:$amount
+		} @else {
+			margin-bottom:$amount
+		}
+	}
+}
+
+// @mixin font-size($font-size, $line-height: normal, $letter-spacing: normal) {
+//     font-size: $font-size * 1px;
+//     // font-size: $font-size * 0.1rem;
+//     // example using rem values and 62.5% font-size so 1rem = 10px
+
+//     @if $line-height==normal {
+//     line-height: normal;
+//     } @else {
+//     line-height: $line-height / $font-size;
+//     }
+
+//     @if $letter-spacing==normal {
+//     letter-spacing: normal;
+//     } @else {
+//     letter-spacing: #{$letter-spacing / $font-size}em;
+//     }
+// }
+
+// /* ===== Usage ===== */
+// p {
+//     @include font-size(12, 18, 1.2);
+//     // returns
+//     font-size: 12px;
+//     line-height: 1.5; // 18 / 12
+//     letter-spacing: 0.1em;
+// }
+
+// @mixin font-size($sizeValue: 12 ){
+//     font-size: $sizeValue + px;
+//     font-size: (0.0625 * $sizeValue) + rem;
+// }
+
+// @mixin line-height($heightValue: 20 ){
+//     line-height: $heightValue + px;
+//     line-height: (0.0625 * $heightValue) + rem;
+// }
+
+// @mixin rhythm($sizeValue: 12, $heightValue: 20) {
+//     @include font-size($sizeValue);
+//     @include line-height($heightValue);
+// }
